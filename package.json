@@ -1,0 +1,14 @@
+{
+  "name": "project-based-curriculum-tools",
+  "version": "1.0.0",
+  "description": "",
+  "main": "reorder-steps.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Randell Dawson",
+  "license": "MIT",
+  "dependencies": {
+    "gray-matter": "^4.0.2"
+  }
+}
