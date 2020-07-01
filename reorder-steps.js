@@ -39,13 +39,20 @@ const parsedData = JSON.parse(metaData);
 
 filesToReorder.forEach(({ oldFileName, newFileName, newStepNum }) => {
   fs.renameSync(`${projectPath}${oldFileName}`,`${projectPath}${newFileName}.tmp`);
+  console.log('rename ' + oldFileName + ' to ' +  newFileName + '.tmp');
   const filePath = `${projectPath}${newFileName}.tmp`;
   const frontMatter = matter.read(filePath);
   const challengeID = frontMatter.data.id;
   challengeOrder.push(['' + challengeID, `Part ${newStepNum}`]);
   const newData = { ...frontMatter.data, title: `Part ${newStepNum}` };
   fs.writeFileSync(filePath, frontMatter.stringify(newData));
-  fs.renameSync(`${projectPath}${newFileName}.tmp`,`${projectPath}${newFileName}`);
+  console.log('rewrite frontmatter for ' + newFileName + '.tmp');
 });
+
+filesToReorder.forEach(({ oldFileName, newFileName, newStepNum }) => {
+  fs.renameSync(`${projectPath}${newFileName}.tmp`,`${projectPath}${newFileName}`);
+  console.log("rename " + newFileName + '.tmp' + " to " + newFileName);
+});
+
 const newMeta = { ...parsedData, challengeOrder };
 fs.writeFileSync(projectMetaPath, JSON.stringify(newMeta, null, 2));
