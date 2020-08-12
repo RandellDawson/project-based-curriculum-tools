@@ -11,13 +11,13 @@ const numWithLeadingZeros = (originalNum, maxDigits) => {
 };
 
 // Only change these variables below this line
-const projectPath = 'D:/Coding/fcc/curriculum/challenges/english/01-responsive-web-design/basic-html-cat-photo-app/';
-const projectMetaPath = 'D:/Coding/fcc/curriculum/challenges/_meta/basic-html-cat-photo-app/meta.json';
+const projectPath = 'D:/Coding/fcc/curriculum/challenges/english/01-responsive-web-design/basic-css-cafe-menu/';
+const projectMetaPath = 'D:/Coding/fcc/curriculum/challenges/_meta/basic-css-cafe-menu/meta.json';
 // Only change these variables above this line
 
 const filesArr = [];
 fs.readdirSync(projectPath).forEach((fileName) => {
-  if (path.extname(fileName).toLowerCase() === ".md") {
+  if (path.extname(fileName).toLowerCase() === ".md" && !fileName.endsWith('final.md')) {
     filesArr.push(fileName);
   }
 });
@@ -33,6 +33,22 @@ const filesToReorder = filesArr.map((fileName, i) => {
   };
 });
 
+/*
+function below modifed from GitHub user @solenoid's gist https://gist.github.com/solenoid/1372386
+*/
+const mongoObjectId = () => {
+  var timestamp = ((new Date().getTime() / 1000) | 0).toString(16);
+  return (
+    timestamp +
+    "xxxxxxxxxxxxxxxx"
+      .replace(/[x]/g, function () {
+        return ((Math.random() * 16) | 0).toString(16);
+      })
+      .toLowerCase()
+  );
+};
+
+
 const challengeOrder = [];
 const metaData = fs.readFileSync(projectMetaPath);
 const parsedData = JSON.parse(metaData);
@@ -41,13 +57,13 @@ filesToReorder.forEach(({ oldFileName, newFileName, newStepNum }) => {
   fs.renameSync(`${projectPath}${oldFileName}`,`${projectPath}${newFileName}.tmp`);
   const filePath = `${projectPath}${newFileName}.tmp`;
   const frontMatter = matter.read(filePath);
-  const challengeID = frontMatter.data.id;
+  const challengeID = frontMatter.data.id || mongoObjectId();
   challengeOrder.push(['' + challengeID, `Part ${newStepNum}`]);
-  const newData = { ...frontMatter.data, title: `Part ${newStepNum}` };
+  const newData = { ...frontMatter.data, id: challengeID, title: `Part ${newStepNum}` };
   fs.writeFileSync(filePath, frontMatter.stringify(newData));
 });
 
-filesToReorder.forEach(({ oldFileName, newFileName, newStepNum }) => {
+filesToReorder.forEach(({ newFileName }) => {
   fs.renameSync(`${projectPath}${newFileName}.tmp`,`${projectPath}${newFileName}`);
 });
 
