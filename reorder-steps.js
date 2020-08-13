@@ -2,13 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const matter = require('gray-matter');
 
-const numWithLeadingZeros = (originalNum, maxDigits) => {
-  let paddedNum = '' + originalNum;
-  while (paddedNum.length < maxDigits) {
-    paddedNum = '0' + paddedNum;
-  }
-  return paddedNum;
-};
+const { numWithLeadingZeros } = require('./utils');
+const { mongoObjectId } = require("./utils");
 
 // Only change these variables below this line
 const projectPath = 'D:/Coding/fcc/curriculum/challenges/english/01-responsive-web-design/basic-css-cafe-menu/';
@@ -32,22 +27,6 @@ const filesToReorder = filesArr.map((fileName, i) => {
     newStepNum
   };
 });
-
-/*
-function below modifed from GitHub user @solenoid's gist https://gist.github.com/solenoid/1372386
-*/
-const mongoObjectId = () => {
-  var timestamp = ((new Date().getTime() / 1000) | 0).toString(16);
-  return (
-    timestamp +
-    "xxxxxxxxxxxxxxxx"
-      .replace(/[x]/g, function () {
-        return ((Math.random() * 16) | 0).toString(16);
-      })
-      .toLowerCase()
-  );
-};
-
 
 const challengeOrder = [];
 const metaData = fs.readFileSync(projectMetaPath);
